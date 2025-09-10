@@ -1,20 +1,54 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# HH Auto-Responder AI
 
-# Run and deploy your AI Studio app
+Интеллектуальный веб-сервис для автоматизации откликов на вакансии на сайте hh.ru. Приложение позволяет пользователям выбирать свои резюме, настраивать детальные фильтры для поиска вакансий, после чего система автоматически отправляет отклики.
 
-This contains everything you need to run your app locally.
+## Архитектура
 
-View your app in AI Studio: https://ai.studio/apps/drive/1Omn5CnCZtPooBOmd7E6h705dFnpp_S-w
+Проект построен по принципу "монорепозитория" и включает в себя:
+-   **Backend**: Написан на Python с использованием фреймворка FastAPI. Отвечает за аутентификацию, взаимодействие с API hh.ru, управление профилями и фоновую обработку.
+-   **Frontend**: Современное одностраничное приложение (SPA), написанное на React/TypeScript.
+-   **База данных**: PostgreSQL для хранения данных пользователей, профилей и логов.
+-   **Фоновые задачи**: Celery и Redis для надежной и асинхронной обработки поиска вакансий и отправки откликов.
+-   **Окружение**: Проект полностью контейнеризирован с помощью Docker и Docker Compose для простоты запуска и развертывания.
 
-## Run Locally
+## Необходимое ПО
 
-**Prerequisites:**  Node.js
+-   [Docker](https://www.docker.com/products/docker-desktop/)
+-   [Node.js](https://nodejs.org/) (для установки зависимостей фронтенда)
 
+## Запуск проекта
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1.  **Клонируйте репозиторий:**
+    ```bash
+    git clone [https://www.nic.ru/info/blog/repository/](https://www.nic.ru/info/blog/repository/)
+    cd hh-auto-responder
+    ```
+
+2.  **Настройте переменные окружения:**
+    -   Скопируйте `backend/.env.example` в `backend/.env` и заполните ваши `HH_CLIENT_ID` и `HH_CLIENT_SECRET`.
+    -   Скопируйте `frontend/.env.local.example` в `frontend/.env.local`.
+
+3.  **Установите зависимости фронтенда:**
+    ```bash
+    cd frontend
+    npm install
+    cd ..
+    ```
+
+4.  **Запустите все сервисы с помощью Docker Compose:**
+    ```bash
+    docker-compose up --build
+    ```
+    Эта команда соберет Docker-образы и запустит контейнеры с бэкендом, базой данных, Redis и фоновыми обработчиками Celery. Бэкенд будет доступен по адресу `http://localhost:8000`.
+
+5.  **Откройте фронтенд:**
+    Фронтенд, запущенный на `http://localhost:5173` (или другом порту Vite), будет автоматически взаимодействовать с бэкендом.
+
+## Как это работает
+
+1.  Пользователь заходит на сайт и нажимает "Войти через hh.ru".
+2.  Его перенаправляет на сайт hh.ru для авторизации.
+3.  После успешного входа hh.ru возвращает пользователя на сайт с временным кодом.
+4.  Фронтенд отправляет этот код на бэкенд, который обменивает его на постоянный токен доступа к API hh.ru и создает сессию для пользователя.
+5.  Пользователь настраивает профили поиска.
+6.  Фоновый обработчик Celery периодически (например, раз в час) проверяет активные профили, ищет по ним новые вакансии и отправляет отклики.
