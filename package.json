@@ -1,7 +1,7 @@
 {
-  "name": "copy-of-hh.ru-auto-responder-ai",
+  "name": "otclick24",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,10 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react-dom": "^19.1.1",
-    "recharts": "^3.2.0",
+    "axios": "^1.12.2",
     "react": "^19.1.1",
-    "@google/genai": "^1.18.0"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

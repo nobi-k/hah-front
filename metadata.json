@@ -1,5 +1,0 @@
-{
-  "name": "Copy of HH.ru Auto-Responder AI",
-  "description": "An intelligent web service that automates job applications on hh.ru. Users can select their resumes, set vacancy filters, and the system will automatically send applications, leveraging AI to generate personalized cover letters for each position.",
-  "requestFramePermissions": []
-}

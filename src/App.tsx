@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import DashboardPage from './components/pages/DashboardPage';
 import LoginPage from './components/pages/LoginPage';
+import CallbackPage from './components/pages/CallbackPage';
 import OnboardingGuide from './components/features/OnboardingGuide';
 import { User } from './types';
 import { login } from './services/apiService';
@@ -10,6 +11,18 @@ const App: React.FC = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isDashboardReady, setIsDashboardReady] = useState(false);
+  const [isCallback, setIsCallback] = useState(false);
+
+  // Проверяем, является ли текущая страница OAuth callback
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const error = urlParams.get('error');
+    
+    if (code || error) {
+      setIsCallback(true);
+    }
+  }, []);
 
   const handleLogin = async () => {
     setIsAuthenticating(true);
@@ -40,6 +53,17 @@ const App: React.FC = () => {
   const handleDashboardReady = useCallback(() => {
     setIsDashboardReady(true);
   }, []);
+
+  const handleOAuthCallback = (user: User) => {
+    setUser(user);
+    // Очищаем URL от параметров OAuth
+    window.history.replaceState({}, document.title, window.location.pathname);
+    setIsCallback(false);
+  };
+
+  if (isCallback) {
+    return <CallbackPage onLogin={handleOAuthCallback} />;
+  }
 
   if (!user) {
     return <LoginPage onLogin={handleLogin} isLoading={isAuthenticating} />;

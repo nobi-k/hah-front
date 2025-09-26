@@ -28,11 +28,9 @@ export interface FilterSettings {
 
 export type CoverLetterMode = 'none' | 'template' | 'ai';
 export type AiTone = 'professional' | 'enthusiastic' | 'formal' | 'friendly';
-export type AiLanguage = 'russian' | 'english';
 
 export interface AiSettings {
   tone: AiTone;
-  language: AiLanguage;
 }
 
 export interface CoverLetterConfig {
@@ -75,4 +73,8 @@ export interface User {
   avatarUrl: string;
   subscription: Subscription;
   paymentMethod: PaymentMethod;
+  coverLetterConfig: CoverLetterConfig;
+  accessToken?: string;
+  resumes?: Resume[];
+  applications?: ApplicationLog[];
 }
